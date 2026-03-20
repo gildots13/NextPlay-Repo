@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'projeto',
 ]
 
 MIDDLEWARE = [
@@ -74,8 +75,12 @@ WSGI_APPLICATION = 'nextplay.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',  # o nome do banco
+        'USER': 'postgres',  # usuário do banco
+        'PASSWORD': 'KfKfEidMEqbMgScSzfzarnkyWFjXzhoz',  # senha
+        'HOST': 'shortline.proxy.rlwy.net',  # host do banco
+        'PORT': '18463'
     }
 }
 
