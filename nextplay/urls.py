@@ -20,3 +20,16 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+from django.urls import path 
+from .views import login_view
+
+urlpatterns = [
+    path('login/', login_view, name='login'),
+]
+
+from django.urls import path, include
+
+urlpatterns = [
+    path('', include('usuarios.urls')),  # Inclui as URLs do aplicativo 'usuarios'
+]
