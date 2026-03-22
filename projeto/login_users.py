@@ -15,3 +15,10 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Usuário ou senha inválidos.'})
         
     return render(request, 'login.html')
+
+from django.urls import path, include
+
+urlpatterns = [
+    path('', include('usuarios.urls')),  # Inclui as URLs do aplicativo 'usuarios'
+    
+]
