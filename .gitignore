@@ -1,4 +1,4 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 5b61713ae60080e68c0e731dc1d2cce3ee03ce4e
+venv/
+__pycache__/
+*.pyc
+.env

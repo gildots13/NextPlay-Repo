@@ -1,10 +1,26 @@
 from django.shortcuts import render
-from .models import Title
+from django.core.paginator import Paginator
+from .models import Titles
 
-def lista_filmes(request):
-    filmes = Title.objects.filmes()  # só filmes pelo type
-    return render(request, 'filmes/lista_filmes.html', {'filmes': filmes})
 
-def lista_series(request):
-    series = Title.objects.series()  # só series pelo type
-    return render(request, 'filmes/lista_series.html', {'series': series})
+def home(request):
+
+    busca = request.GET.get('busca')
+
+    filmes = Titles.objects.filter(type='movie')
+
+    if busca:
+        filmes = filmes.filter(title__icontains=busca)
+
+    filmes = filmes[:500]
+
+    paginator = Paginator(filmes, 20)
+
+    page_number = request.GET.get('page')
+
+    filmes = paginator.get_page(page_number)
+
+    return render(request, 'projeto/index.html', {
+        'filmes': filmes,
+        'busca': busca
+    })
