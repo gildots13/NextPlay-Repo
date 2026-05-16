@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextPlay</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'contas/css/style.css' %}">
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-blue"></div>
+        <div class="shape shape-red"></div>
+    </div>
+
+    <main class="login-container">
+        <div class="login-card">
+            <header class="header">
+                <h1 class="logo">Next<span>Play</span></h1>
+                <p class="subtitle" id="form-subtitle">Faça login para continuar</p>
+            </header>
+
+            <div class="forms-wrapper">
+                
+                <!-- ESTADO: LOGIN -->
+                <section id="login-state" class="state-active">
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="login-email">E-mail</label>
+                            <input type="email" id="login-email" class="form-control" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-pass">Senha</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="login-pass" class="form-control password-input" placeholder="••••••••" required>
+                                <button type="button" class="toggle-password">Ver</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Entrar</span>
+                            <div class="loader"></div>
+                        </button>
+                    </form>
+
+                    <div class="divider"><span>ou</span></div>
+
+                    <p class="footer-text">
+                        Não tem uma conta? <a href="javascript:void(0)" id="go-to-signup">Criar Conta</a>
+                    </p>
+                </section>
+
+                <!-- ESTADO: CRIAR CONTA -->
+                <section id="signup-state" class="state-hidden">
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label for="reg-email">E-mail</label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-pass">Senha</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="reg-pass" class="form-control password-input" placeholder="Mínimo 8 caracteres" required>
+                                <button type="button" class="toggle-password">Ver</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="btn-text">Cadastrar</span>
+                            <div class="loader"></div>
+                        </button>
+                    </form>
+
+                    <p class="footer-text">
+                        Já possui conta? <a href="javascript:void(0)" id="go-to-login">Fazer Login</a>
+                    </p>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'contas/js/script.js' %}"></script>
+</body>
+</html>

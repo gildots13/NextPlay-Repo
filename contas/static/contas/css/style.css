@@ -1,0 +1,304 @@
+/* Definições de Design System */
+:root {
+    --bg-color: #0A0A0A;
+    --card-bg: rgba(18, 18, 18, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --primary-blue: #2563FF;
+    --primary-red: #FF3B3B;
+    --gradient-brand: linear-gradient(135deg, var(--primary-blue) 0%, #7c3aed 50%, var(--primary-red) 100%);
+    --text-main: #FFFFFF;
+    --text-muted: #94A3B8;
+    --input-bg: rgba(255, 255, 255, 0.03);
+    --input-border: rgba(255, 255, 255, 0.1);
+    --focus-ring: rgba(37, 99, 255, 0.2);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Background Shapes */
+.bg-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.shape {
+    position: absolute;
+    filter: blur(140px);
+    opacity: 0.35;
+    border-radius: 50%;
+    animation: float 12s infinite alternate ease-in-out;
+}
+
+.shape-blue {
+    background: var(--primary-blue);
+    width: 450px;
+    height: 450px;
+    top: -100px;
+    left: -100px;
+}
+
+.shape-red {
+    background: var(--primary-red);
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -6s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 60px) scale(1.1); }
+}
+
+/* Login Card */
+.login-container {
+    width: 100%;
+    max-width: 460px;
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Header & Logo */
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logo {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-top: 8px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #CBD5E1;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 4px var(--focus-ring);
+}
+
+.forgot-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 0.8rem;
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background: var(--gradient-brand);
+    color: white;
+    margin-top: 1.8rem;
+    box-shadow: 0 10px 20px -5px rgba(37, 99, 255, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.8rem 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.divider span {
+    padding: 0 15px;
+}
+
+/* Footer Text */
+.footer-text {
+    text-align: center;
+    margin-top: 2.2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.footer-text a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-text a:hover {
+    color: var(--primary-blue);
+}
+
+/* Loading State */
+.loader {
+    display: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.is-loading .btn-text { display: none; }
+.is-loading .loader { display: block; }
+.is-loading { pointer-events: none; opacity: 0.8; }
+
+/* Mobile */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 2.5rem 1.5rem;
+        background: rgba(18, 18, 18, 0.9);
+    }
+}
+
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo do botão 'Ver' dentro do input */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+/* 1. O wrapper agora garante que os forms fiquem um em cima do outro */
+.forms-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    position: relative;
+}
+
+/* 2. Configuração base para os estados (Login e Signup) */
+section {
+    grid-area: 1 / 1; /* Ambos ocupam a mesma célula do grid */
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
+}
+
+/* 3. Estado Escondido (Empurrado para cima e invisível) */
+.state-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    pointer-events: none; /* Garante que não dê pra clicar no que está invisível */
+}
+
+/* 4. Estado Ativo (No lugar e visível) */
+.state-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: all;
+}
