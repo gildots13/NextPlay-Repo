@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>NextPlay</title>
+
+    <link rel="stylesheet"
+          href="{% static 'projeto/css/style.css' %}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <h1>
+            NEXT<span>PLAY</span>
+        </h1>
+
+        <nav>
+
+             <button class="nav-btn active"
+            data-tab="populares">
+        Populares
+    </button>
+
+    <button class="nav-btn"
+            data-tab="filmes">
+        Filmes
+    </button>
+
+    <button class="nav-btn"
+            data-tab="series">
+        Séries
+    </button>
+
+
+        </nav>
+
+        <a href="/logout/" class="logout-btn">
+            Sair
+        </a>
+
+    </header>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="mini-title">
+                DESCUBRA • AVALIE • COMENTE
+            </p>
+
+            <h2>
+                Seu próximo
+                <span>favorito</span>
+                está aqui
+            </h2>
+
+            <p>
+                Explore filmes e séries,
+                deixe avaliações,
+                leia comentários
+                e descubra novas histórias.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- CONTEÚDO -->
+
+    <main>
+
+        <!-- POPULARES -->
+
+        <section class="section active-section"
+         id="populares">
+
+            <h3>Populares</h3>
+
+            <div class="cards">
+
+                {% for item in populares %}
+
+                <div class="card"
+                     onclick="abrirModal(
+                     '{{ item.title|escapejs }}',
+                     '{{ item.description|escapejs }}',
+                     '{{ item.image_url|escapejs }}'
+                     )">
+
+                    <img 
+                        src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                        src="{{ item.image_url }}"
+                         alt="{{ item.title }}">
+
+                    <div class="card-info">
+
+                        <h4>
+                            {{ item.title }}
+                        </h4>
+
+                        <div class="stars">
+
+                            <span onclick="avaliar(event, this)">☆</span>
+                            <span onclick="avaliar(event, this)">☆</span>
+                            <span onclick="avaliar(event, this)">☆</span>
+                            <span onclick="avaliar(event, this)">☆</span>
+                            <span onclick="avaliar(event, this)">☆</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+        //A<section class="section hidden-section"
+         id="filmes">
+
+    <h3>Filmes</h3>
+
+    <div class="cards">
+
+        {% for item in filmes %}
+
+        <!-- CARD -->
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+    </main>
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+
+        <div class="modal-content">
+
+            <button class="close"
+                    onclick="fecharModal()">
+                ×
+            </button>
+
+            <img id="modal-image">
+
+            <h2 id="modal-title"></h2>
+
+            <p id="modal-description"></p>
+
+            <div class="comments">
+
+                <h3>Comentários</h3>
+
+                <textarea
+                    placeholder="Escreva um comentário...">
+                </textarea>
+
+                <button>
+                    Publicar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{% static 'projeto/js/app.js' %}"></script>
+
+</body>
+</html>
