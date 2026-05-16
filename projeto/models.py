@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Titles(models.Model):
     title = models.CharField(max_length=200)
@@ -17,3 +18,36 @@ class Titles(models.Model):
     class Meta:
         managed = False
         db_table = 'titles'
+
+class Comment(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    title = models.ForeignKey(
+        Titles,
+        on_delete=models.CASCADE
+    )
+
+    text = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+class Rating(models.Model):
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    title = models.ForeignKey(
+        Titles,
+        on_delete=models.CASCADE
+    )
+
+    stars = models.IntegerField()
+
