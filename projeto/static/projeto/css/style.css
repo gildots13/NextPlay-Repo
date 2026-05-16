@@ -502,12 +502,10 @@ main{
     }
 }
 /*A*/
-.hidden-section{
-
+.section{
     display:none;
 }
 
-.active-section{
-
+.section.active-section{
     display:block;
 }

@@ -1,16 +1,18 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import Titles
 
-def app(request):
 
+@login_required(login_url="/login/")
+def app(request):
     populares = Titles.objects.all().order_by("-popularity")[:40]
 
     filmes = Titles.objects.filter(
-        type="movie"
+        type__iexact="movie"
     ).order_by("-popularity")[:40]
 
     series = Titles.objects.filter(
-        type="tv"
+        type__iexact="series"
     ).order_by("-popularity")[:40]
 
     context = {
