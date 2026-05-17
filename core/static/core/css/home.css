@@ -1,0 +1,360 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#050505;
+    overflow:hidden;
+    color:white;
+    height:100vh;
+}
+
+/* BACKGROUND */
+
+.background{
+    position:absolute;
+    inset:0;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        to bottom,
+        rgba(0,0,0,.6),
+        rgba(0,0,0,.92)
+    );
+
+    z-index:2;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+
+    overflow:hidden;
+}
+
+.slide-track{
+    display:flex;
+    gap:30px;
+
+    width:max-content;
+
+    padding:40px;
+
+    animation:scroll 35s linear infinite;
+}
+
+.slide-track img{
+
+    width:240px;
+    height:360px;
+
+    object-fit:cover;
+
+    border-radius:20px;
+
+    opacity:.45;
+
+    transition:.4s;
+
+    box-shadow:
+    0 0 30px rgba(0,0,0,.8);
+
+}
+
+.slide-track img:hover{
+    opacity:1;
+    transform:scale(1.05);
+}
+
+@keyframes scroll{
+
+    from{
+        transform:translateX(0);
+    }
+
+    to{
+        transform:translateX(-50%);
+    }
+
+}
+
+/* HEADER */
+
+header{
+
+    position:relative;
+    z-index:20;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:30px 60px;
+}
+
+header h1{
+
+    font-size:34px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+header span{
+        background:linear-gradient(
+        90deg,
+        #0066ff,
+        #d90429
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+}
+
+.login-btn,
+.register-btn{
+
+    padding:14px 28px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-size:15px;
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.login-btn{
+
+    background:transparent;
+    border:1px solid #444;
+    color:white;
+}
+
+.login-btn:hover{
+    background:#111;
+}
+
+.register-btn{
+
+   background:linear-gradient(
+        90deg,
+        #0066ff,
+        #d90429
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+    color:white;
+}
+
+.register-btn:hover{
+
+    background:linear-gradient(
+        90deg,
+        #0066ff,
+        #d90429
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+
+    transform:translateY(-2px);
+}
+
+/* HERO */
+
+main{
+
+    position:relative;
+    z-index:20;
+
+    height:80vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    padding:20px;
+}
+
+.hero{
+    max-width:850px;
+}
+
+.mini-title{
+
+    color:#0066ff;
+
+    letter-spacing:4px;
+
+    font-size:14px;
+
+    margin-bottom:25px;
+}
+
+.hero h2{
+
+    font-size:78px;
+
+    line-height:1.1;
+
+    margin-bottom:25px;
+
+    font-weight:800;
+}
+
+.hero h2 span{
+    color:#d90429;
+}
+
+.description{
+
+    color:#cfcfcf;
+
+    font-size:20px;
+
+    line-height:1.8;
+
+    margin-bottom:40px;
+}
+
+.hero-buttons{
+
+    display:flex;
+    justify-content:center;
+    gap:20px;
+}
+
+.primary,
+.secondary{
+
+    padding:18px 34px;
+
+    border:none;
+
+    border-radius:14px;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.primary{
+
+   background:linear-gradient(
+        90deg,
+        #0066ff,
+        #d90429
+    );
+
+    color:white;
+
+    border:none;
+}
+
+.primary:hover{
+
+    transform:translateY(-3px);
+
+    filter:brightness(1.1);
+    transform:translateY(-3px);
+}
+
+.secondary{
+
+    background:transparent;
+
+    border:1px solid #444;
+
+    color:white;
+}
+
+.secondary:hover{
+
+    background:#111;
+
+    transform:translateY(-3px);
+}
+.textcolor{
+    background:linear-gradient(
+        90deg,
+        #0066ff,
+        #d90429
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:900px){
+
+    .hero h2{
+        font-size:52px;
+    }
+
+    .description{
+        font-size:17px;
+    }
+
+    header{
+        padding:25px;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .hero h2{
+        font-size:38px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+    }
+
+    header{
+        flex-direction:column;
+        gap:20px;
+    }
+
+}
+.primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}

@@ -1,0 +1,423 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>NextPlay</title>
+
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <link rel="stylesheet"
+          href="{% static 'projeto/css/style.css' %}?v=1300">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="topbar-logo">
+            NEXT<span>PLAY</span>
+        </div>
+
+        <nav class="topbar-nav">
+            <button class="nav-btn active" data-tab="populares">
+                Populares
+            </button>
+
+            <button class="nav-btn" data-tab="filmes">
+                Filmes
+            </button>
+
+            <button class="nav-btn" data-tab="series">
+                Séries
+            </button>
+
+            <button class="nav-btn favorite-tab-btn" data-tab="favoritos">
+                Favoritos
+            </button>
+        </nav>
+
+        <div class="topbar-actions">
+            <button class="search-trigger"
+                    id="search-trigger"
+                    type="button"
+                    aria-label="Pesquisar">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M10.8 18.1C14.8317 18.1 18.1 14.8317 18.1 10.8C18.1 6.76832 14.8317 3.5 10.8 3.5C6.76832 3.5 3.5 6.76832 3.5 10.8C3.5 14.8317 6.76832 18.1 10.8 18.1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M16.2 16.2L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <a href="/logout/" class="logout-btn">
+                Sair
+            </a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <p class="mini-title">
+                DESCUBRA • AVALIE • COMENTE
+            </p>
+
+            <h2>
+                Seu próximo
+                <span>favorito</span>
+                está aqui
+            </h2>
+
+            <p>
+                Explore filmes e séries,
+                deixe avaliações,
+                salve seus favoritos
+                e descubra novas histórias.
+            </p>
+        </div>
+    </section>
+
+    <main>
+
+        <section class="section active-section" id="populares">
+            <h3>Populares</h3>
+
+            <div class="cards">
+                {% for item in populares %}
+
+                    <div class="card"
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}"
+                                aria-label="Favoritar">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
+
+                        {% if item.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                                 alt="{{ item.title }}">
+                        {% else %}
+                            <div class="poster-placeholder">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+
+                        <div class="card-info">
+                            <h4>
+                                {{ item.title }}
+                            </h4>
+
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <p class="empty-message">
+                        Nenhum item popular encontrado.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section hidden-section" id="filmes">
+            <h3>Filmes</h3>
+
+            <div class="cards">
+                {% for item in filmes %}
+
+                    <div class="card"
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}"
+                                aria-label="Favoritar">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
+
+                        {% if item.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                                 alt="{{ item.title }}">
+                        {% else %}
+                            <div class="poster-placeholder">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+
+                        <div class="card-info">
+                            <h4>
+                                {{ item.title }}
+                            </h4>
+
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <p class="empty-message">
+                        Nenhum filme encontrado.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section hidden-section" id="series">
+            <h3>Séries</h3>
+
+            <div class="cards">
+                {% for item in series %}
+
+                    <div class="card"
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}"
+                                aria-label="Favoritar">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
+
+                        {% if item.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                                 alt="{{ item.title }}">
+                        {% else %}
+                            <div class="poster-placeholder">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+
+                        <div class="card-info">
+                            <h4>
+                                {{ item.title }}
+                            </h4>
+
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <p class="empty-message">
+                        Nenhuma série encontrada.
+                    </p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section hidden-section" id="favoritos">
+            <div class="favorites-title-row">
+                <div>
+                    <h3>Meus favoritos</h3>
+                    <p>Filmes e séries que você salvou para ver depois.</p>
+                </div>
+
+                <div class="favorites-count">
+                    {{ favoritos|length }} salvo(s)
+                </div>
+            </div>
+
+            <div class="cards favorites-cards">
+                {% for item in favoritos %}
+
+                    <div class="card"
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="true"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn active"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="true"
+                                aria-label="Remover dos favoritos">
+                            ♥
+                        </button>
+
+                        {% if item.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                                 alt="{{ item.title }}">
+                        {% else %}
+                            <div class="poster-placeholder">
+                                Sem imagem
+                            </div>
+                        {% endif %}
+
+                        <div class="card-info">
+                            <h4>
+                                {{ item.title }}
+                            </h4>
+
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <div class="favorites-empty">
+                        <div class="favorites-empty-icon">♡</div>
+                        <h4>Nenhum favorito ainda</h4>
+                        <p>Clique no coração de um filme ou série para salvar aqui.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-dialog">
+            <button type="button"
+                    class="search-dialog-close"
+                    id="search-dialog-close">
+                ×
+            </button>
+
+            <div class="search-dialog-header">
+                <div class="search-dialog-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M10.8 18.1C14.8317 18.1 18.1 14.8317 18.1 10.8C18.1 6.76832 14.8317 3.5 10.8 3.5C6.76832 3.5 3.5 6.76832 3.5 10.8C3.5 14.8317 6.76832 18.1 10.8 18.1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16.2 16.2L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <h2>Pesquisar</h2>
+                    <p>Busque filmes e séries salvos na sua base.</p>
+                </div>
+            </div>
+
+            <div class="search-input-wrap">
+                <input type="text"
+                       id="search-input"
+                       placeholder="Digite o nome de um filme ou série..."
+                       autocomplete="off">
+
+                <button type="button"
+                        id="search-clear"
+                        class="search-clear">
+                    ×
+                </button>
+            </div>
+
+            <div class="search-status" id="search-status">
+                Digite pelo menos duas letras para pesquisar.
+            </div>
+
+            <div class="search-results-grid" id="search-results"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="close" onclick="fecharModal()">
+                ×
+            </button>
+
+            <img id="modal-image" alt="Imagem do título selecionado">
+
+            <div class="modal-title-row">
+                <h2 id="modal-title"></h2>
+
+                <button type="button"
+                        class="modal-favorite-btn"
+                        id="modal-favorite-btn"
+                        data-favorited="false">
+                    <span>♡</span>
+                    <strong>Favoritar</strong>
+                </button>
+            </div>
+
+            <p id="modal-description"></p>
+
+            <div class="modal-rating">
+                <h3>Minha avaliação</h3>
+
+                <div class="modal-stars" id="modal-stars">
+                    <span data-star="1">☆</span>
+                    <span data-star="2">☆</span>
+                    <span data-star="3">☆</span>
+                    <span data-star="4">☆</span>
+                    <span data-star="5">☆</span>
+                </div>
+            </div>
+
+            <div class="comments">
+                <h3>Comentários</h3>
+
+                <div class="comments-list" id="comments-list">
+                    <p class="empty-message">
+                        Carregando comentários...
+                    </p>
+                </div>
+
+                <textarea id="comment-text"
+                          placeholder="Escreva um comentário..."></textarea>
+
+                <button id="publish-comment" type="button">
+                    Publicar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'projeto/js/app.js' %}?v=1300"></script>
+
+</body>
+</html>

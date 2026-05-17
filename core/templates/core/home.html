@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NextPlay</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- BACKGROUND -->
+
+    <div class="background">
+
+        <div class="overlay"></div>
+
+        <div class="slider">
+
+            <div class="slide-track">
+
+                <!-- DUPLICA PARA LOOP -->
+
+                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg">
+
+                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/6DrHO1jr3qVrViUO6s6kFiAGM7.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg">
+                <img src="https://image.tmdb.org/t/p/w500/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- NAVBAR -->
+
+    <header>
+
+        <h1>
+            NEXT<span>PLAY</span>
+        </h1>
+
+    </header>
+
+    <!-- HERO -->
+
+    <main>
+
+        <section class="hero">
+
+            <p class="mini-title">
+                FILMES • SÉRIES • AVALIAÇÕES • INDICAÇÕES
+            </p>
+
+            <h2>
+                Descubra seu próximo
+                <span class="textcolor">favorito</span>
+            </h2>
+
+            <p class="description">
+
+                NextPlay é a plataforma onde você organiza, comenta e
+                descobre filmes e séries todos os dias.
+                Chega de ficar horas procurando o que assistir!
+
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="{% url 'login' %}" class="primary">
+                  Começar Agora
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
