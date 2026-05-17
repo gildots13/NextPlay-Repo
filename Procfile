@@ -1,0 +1,1 @@
+web: gunicorn NextPlay-Repo.wsgi
