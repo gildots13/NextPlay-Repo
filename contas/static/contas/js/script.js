@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    window.addEventListener("pageshow", event => {
+    if (event.persisted) {
+        window.location.reload();
+    }
+}); 
     console.log('SCRIPT DE LOGIN CARREGADO');
 
     const loginSec = document.getElementById('login-state');
@@ -79,46 +85,79 @@ document.addEventListener('DOMContentLoaded', () => {
         button.disabled = loading;
     }
 
-    async function enviarDados(url, dados) {
-        const response = await fetch(url, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dados)
-        });
+    function getCSRFToken() {
 
-        const texto = await response.text();
+    let cookieValue = null;
 
-        let resultado;
+    if (document.cookie && document.cookie !== '') {
 
-        try {
-            resultado = JSON.parse(texto);
-        } catch (error) {
-            console.error('Resposta não JSON:', texto);
+        const cookies = document.cookie.split(';');
 
-            return {
-                ok: false,
-                statusHttp: response.status,
-                resultado: {
-                    status: 'erro',
-                    mensagem: `O servidor respondeu em formato inválido. HTTP ${response.status}`
-                }
-            };
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();
+
+            if (cookie.startsWith('csrftoken=')) {
+
+                cookieValue = cookie.substring('csrftoken='.length);
+
+                break;
+            }
         }
+    }
+
+    return cookieValue;
+}
+
+async function enviarDados(url, dados) {
+
+    const csrfToken = getCSRFToken();
+
+    const response = await fetch(url, {
+        method: 'POST',
+
+        credentials: 'same-origin',
+
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+
+        body: JSON.stringify(dados)
+    });
+
+    const texto = await response.text();
+
+    let resultado;
+
+    try {
+
+        resultado = JSON.parse(texto);
+
+    } catch (error) {
+
+        console.error('Resposta não JSON:', texto);
 
         return {
-            ok: response.ok,
+            ok: false,
             statusHttp: response.status,
-            resultado
+            resultado: {
+                status: 'erro',
+                mensagem: `O servidor respondeu em formato inválido. HTTP ${response.status}`
+            }
         };
     }
 
-    function redirecionarLoginSucesso() {
-        window.location.href = '/app/';
-    }
+    return {
+        ok: response.ok,
+        statusHttp: response.status,
+        resultado
+    };
+}
 
+   function redirecionarLoginSucesso(email) {
+    window.location.replace("/app/");
+}
     goToSignup.addEventListener('click', event => {
         event.preventDefault();
         mostrarCadastro();

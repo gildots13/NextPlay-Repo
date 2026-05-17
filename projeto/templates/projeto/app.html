@@ -11,24 +11,26 @@
 
     <title>NextPlay</title>
 
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
     <link rel="stylesheet"
-          href="{% static 'projeto/css/style.css' %}">
+          href="{% static 'projeto/css/style.css' %}?v=4000">
 
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
 </head>
 
 <body>
 
-    <header>
-        <h1>
+    <header class="topbar">
+        <div class="topbar-logo">
             NEXT<span>PLAY</span>
-        </h1>
+        </div>
 
-        <nav>
+        <nav class="topbar-nav">
             <button class="nav-btn active" data-tab="populares">
                 Populares
             </button>
@@ -40,11 +42,126 @@
             <button class="nav-btn" data-tab="series">
                 Séries
             </button>
+
+            <button class="nav-btn favorite-tab-btn" data-tab="favoritos">
+                Favoritos
+            </button>
         </nav>
 
-        <a href="/logout/" class="logout-btn">
-            Sair
-        </a>
+        <div class="topbar-actions">
+            <button class="search-trigger"
+                    id="search-trigger"
+                    type="button"
+                    aria-label="Pesquisar">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M10.8 18.1C14.8317 18.1 18.1 14.8317 18.1 10.8C18.1 6.76832 14.8317 3.5 10.8 3.5C6.76832 3.5 3.5 6.76832 3.5 10.8C3.5 14.8317 6.76832 18.1 10.8 18.1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M16.2 16.2L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+
+            <div class="profile-menu-wrapper">
+                <button type="button"
+                        class="profile-menu-trigger"
+                        id="profile-menu-trigger">
+                    <span class="profile-avatar">
+                        {{ request.user.username|first|upper }}
+                    </span>
+
+                    <span class="profile-trigger-text">
+                        Minha conta
+                    </span>
+
+                    <span class="profile-trigger-arrow">
+                        ▾
+                    </span>
+                </button>
+
+                <div class="profile-menu-panel" id="profile-menu-panel">
+                    <div class="profile-panel-header">
+                        <div class="profile-panel-avatar">
+                            {{ request.user.username|first|upper }}
+                        </div>
+
+                        <div>
+                            <h4>{{ request.user.username }}</h4>
+                            <p>Perfil NextPlay</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div>
+                            <strong id="profile-stat-favoritos">{{ total_favoritos }}</strong>
+                            <span>Favoritos</span>
+                        </div>
+
+                        <div>
+                            <strong>{{ total_avaliacoes }}</strong>
+                            <span>Avaliações</span>
+                        </div>
+
+                        <div>
+                            <strong>{{ total_pesquisas }}</strong>
+                            <span>Pesquisas</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-section-block">
+                        <div class="profile-section-title">
+                            <span>♥</span>
+                            <strong>Favoritos recentes</strong>
+                        </div>
+
+                        {% for favorito in favoritos_recentes %}
+                            <div class="profile-mini-item">
+                                <span>{{ favorito.title.title }}</span>
+                                <small>{{ favorito.created_at|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        {% empty %}
+                            <p class="profile-empty">Nenhum favorito ainda.</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="profile-section-block">
+                        <div class="profile-section-title">
+                            <span>★</span>
+                            <strong>Últimas avaliações</strong>
+                        </div>
+
+                        {% for avaliacao in avaliacoes_recentes %}
+                            <div class="profile-mini-item">
+                                <span>{{ avaliacao.title.title }}</span>
+                                <small>{{ avaliacao.stars }}/5 estrelas</small>
+                            </div>
+                        {% empty %}
+                            <p class="profile-empty">Nenhuma avaliação ainda.</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="profile-section-block">
+                        <div class="profile-section-title">
+                            <span>⌕</span>
+                            <strong>Pesquisas recentes</strong>
+                        </div>
+
+                        {% for pesquisa in pesquisas_recentes %}
+                            <div class="profile-search-term">
+                                {{ pesquisa.term }}
+                            </div>
+                        {% empty %}
+                            <p class="profile-empty">Nenhuma pesquisa ainda.</p>
+                        {% endfor %}
+                    </div>
+
+                    <a href="/logout/" class="profile-logout">
+                        Sair da conta
+                    </a>
+                </div>
+            </div>
+
+            <a href="/logout/" class="logout-btn">
+                Sair
+            </a>
+        </div>
     </header>
 
     <section class="hero">
@@ -60,10 +177,8 @@
             </h2>
 
             <p>
-                Explore filmes e séries,
-                deixe avaliações,
-                leia comentários
-                e descubra novas histórias.
+                Explore filmes e séries, deixe avaliações,
+                salve seus favoritos e descubra novas histórias.
             </p>
         </div>
     </section>
@@ -77,40 +192,48 @@
                 {% for item in populares %}
 
                     <div class="card"
-                         onclick="abrirModal(
-                            '{{ item.title|escapejs }}',
-                            '{{ item.description|default:"Sem descrição disponível."|escapejs }}',
-                            '{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}'
-                         )">
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
 
                         {% if item.poster_path %}
                             <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
                                  alt="{{ item.title }}">
                         {% else %}
-                            <div class="poster-placeholder">
-                                Sem imagem
-                            </div>
+                            <div class="poster-placeholder">Sem imagem</div>
                         {% endif %}
 
                         <div class="card-info">
-                            <h4>
-                                {{ item.title }}
-                            </h4>
+                            <h4>{{ item.title }}</h4>
 
-                            <div class="stars">
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+
+                            <div class="rating-number">
+                                Sua nota:
+                                <span class="rating-value">{{ item.user_rating|default:0 }}/5</span>
                             </div>
                         </div>
                     </div>
 
                 {% empty %}
-                    <p class="empty-message">
-                        Nenhum item popular encontrado.
-                    </p>
+                    <p class="empty-message">Nenhum item popular encontrado.</p>
                 {% endfor %}
             </div>
         </section>
@@ -122,40 +245,48 @@
                 {% for item in filmes %}
 
                     <div class="card"
-                         onclick="abrirModal(
-                            '{{ item.title|escapejs }}',
-                            '{{ item.description|default:"Sem descrição disponível."|escapejs }}',
-                            '{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}'
-                         )">
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
 
                         {% if item.poster_path %}
                             <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
                                  alt="{{ item.title }}">
                         {% else %}
-                            <div class="poster-placeholder">
-                                Sem imagem
-                            </div>
+                            <div class="poster-placeholder">Sem imagem</div>
                         {% endif %}
 
                         <div class="card-info">
-                            <h4>
-                                {{ item.title }}
-                            </h4>
+                            <h4>{{ item.title }}</h4>
 
-                            <div class="stars">
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+
+                            <div class="rating-number">
+                                Sua nota:
+                                <span class="rating-value">{{ item.user_rating|default:0 }}/5</span>
                             </div>
                         </div>
                     </div>
 
                 {% empty %}
-                    <p class="empty-message">
-                        Nenhum filme encontrado.
-                    </p>
+                    <p class="empty-message">Nenhum filme encontrado.</p>
                 {% endfor %}
             </div>
         </section>
@@ -167,45 +298,157 @@
                 {% for item in series %}
 
                     <div class="card"
-                         onclick="abrirModal(
-                            '{{ item.title|escapejs }}',
-                            '{{ item.description|default:"Sem descrição disponível."|escapejs }}',
-                            '{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}'
-                         )">
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="{{ item.is_favorite|yesno:'true,false' }}"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn {% if item.is_favorite %}active{% endif %}"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="{{ item.is_favorite|yesno:'true,false' }}">
+                            {% if item.is_favorite %}♥{% else %}♡{% endif %}
+                        </button>
 
                         {% if item.poster_path %}
                             <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
                                  alt="{{ item.title }}">
                         {% else %}
-                            <div class="poster-placeholder">
-                                Sem imagem
-                            </div>
+                            <div class="poster-placeholder">Sem imagem</div>
                         {% endif %}
 
                         <div class="card-info">
-                            <h4>
-                                {{ item.title }}
-                            </h4>
+                            <h4>{{ item.title }}</h4>
 
-                            <div class="stars">
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
-                                <span>☆</span>
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+
+                            <div class="rating-number">
+                                Sua nota:
+                                <span class="rating-value">{{ item.user_rating|default:0 }}/5</span>
                             </div>
                         </div>
                     </div>
 
                 {% empty %}
-                    <p class="empty-message">
-                        Nenhuma série encontrada.
-                    </p>
+                    <p class="empty-message">Nenhuma série encontrada.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="section hidden-section" id="favoritos">
+            <div class="favorites-title-row">
+                <div>
+                    <h3>Meus favoritos</h3>
+                    <p>Filmes e séries que você salvou para ver depois.</p>
+                </div>
+
+                <div class="favorites-count" id="favorites-count-badge">
+                    {{ favoritos|length }} salvo(s)
+                </div>
+            </div>
+
+            <div class="cards favorites-cards">
+                {% for item in favoritos %}
+
+                    <div class="card"
+                         data-id="{{ item.id }}"
+                         data-title="{{ item.title|escape }}"
+                         data-description="{{ item.description|default:'Sem descrição disponível.'|escape }}"
+                         data-favorite="true"
+                         data-image="{% if item.poster_path %}https://image.tmdb.org/t/p/w500{{ item.poster_path }}{% endif %}">
+
+                        <button type="button"
+                                class="favorite-card-btn active"
+                                data-title-id="{{ item.id }}"
+                                data-favorited="true">
+                            ♥
+                        </button>
+
+                        {% if item.poster_path %}
+                            <img src="https://image.tmdb.org/t/p/w500{{ item.poster_path }}"
+                                 alt="{{ item.title }}">
+                        {% else %}
+                            <div class="poster-placeholder">Sem imagem</div>
+                        {% endif %}
+
+                        <div class="card-info">
+                            <h4>{{ item.title }}</h4>
+
+                            <div class="stars"
+                                 data-title-id="{{ item.id }}"
+                                 data-current-rating="{{ item.user_rating|default:0 }}">
+                                <span data-star="1">☆</span>
+                                <span data-star="2">☆</span>
+                                <span data-star="3">☆</span>
+                                <span data-star="4">☆</span>
+                                <span data-star="5">☆</span>
+                            </div>
+
+                            <div class="rating-number">
+                                Sua nota:
+                                <span class="rating-value">{{ item.user_rating|default:0 }}/5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <div class="favorites-empty">
+                        <div class="favorites-empty-icon">♡</div>
+                        <h4>Nenhum favorito ainda</h4>
+                        <p>Clique no coração de um filme ou série para salvar aqui.</p>
+                    </div>
                 {% endfor %}
             </div>
         </section>
 
     </main>
+
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-dialog">
+            <button type="button"
+                    class="search-dialog-close"
+                    id="search-dialog-close">
+                ×
+            </button>
+
+            <div class="search-dialog-header">
+                <div class="search-dialog-icon">⌕</div>
+
+                <div>
+                    <h2>Pesquisar</h2>
+                    <p>Busque filmes e séries salvos na sua base.</p>
+                </div>
+            </div>
+
+            <div class="search-input-wrap">
+                <input type="text"
+                       id="search-input"
+                       placeholder="Digite o nome de um filme ou série..."
+                       autocomplete="off">
+
+                <button type="button"
+                        id="search-clear"
+                        class="search-clear">
+                    ×
+                </button>
+            </div>
+
+            <div class="search-status" id="search-status">
+                Digite pelo menos duas letras para pesquisar.
+            </div>
+
+            <div class="search-results-grid" id="search-results"></div>
+        </div>
+    </div>
 
     <div class="modal" id="modal">
         <div class="modal-content">
@@ -215,23 +458,54 @@
 
             <img id="modal-image" alt="Imagem do título selecionado">
 
-            <h2 id="modal-title"></h2>
+            <div class="modal-title-row">
+                <h2 id="modal-title"></h2>
+
+                <button type="button"
+                        class="modal-favorite-btn"
+                        id="modal-favorite-btn"
+                        data-favorited="false">
+                    <span>♡</span>
+                    <strong>Favoritar</strong>
+                </button>
+            </div>
 
             <p id="modal-description"></p>
+
+            <div class="modal-rating">
+                <h3>Minha avaliação</h3>
+
+                <div class="modal-stars" id="modal-stars">
+                    <span data-star="1">☆</span>
+                    <span data-star="2">☆</span>
+                    <span data-star="3">☆</span>
+                    <span data-star="4">☆</span>
+                    <span data-star="5">☆</span>
+                </div>
+
+                <div class="modal-rating-number" id="modal-rating-number">
+                    Sua nota: 0/5
+                </div>
+            </div>
 
             <div class="comments">
                 <h3>Comentários</h3>
 
-                <textarea placeholder="Escreva um comentário..."></textarea>
+                <div class="comments-list" id="comments-list">
+                    <p class="empty-message">Carregando comentários...</p>
+                </div>
 
-                <button>
+                <textarea id="comment-text"
+                          placeholder="Escreva um comentário..."></textarea>
+
+                <button id="publish-comment" type="button">
                     Publicar
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="{% static 'projeto/js/app.js' %}?v=70"></script>
+    <script src="{% static 'projeto/js/app.js' %}?v=4000"></script>
 
 </body>
 </html>

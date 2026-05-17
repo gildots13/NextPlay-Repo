@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    {% csrf_token %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NextPlay</title>
@@ -17,7 +18,7 @@
 </head>
 
 <body>
-
+    {% csrf_token %}
     <div class="bg-shapes">
         <div class="shape shape-blue"></div>
         <div class="shape shape-red"></div>

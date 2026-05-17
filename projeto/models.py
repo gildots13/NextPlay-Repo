@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Titles(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
@@ -17,10 +18,10 @@ class Titles(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'titles'
+        db_table = "titles"
+
 
 class Comment(models.Model):
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE
@@ -37,8 +38,11 @@ class Comment(models.Model):
         auto_now_add=True
     )
 
-class Rating(models.Model):
+    def __str__(self):
+        return f"{self.user.username} comentou em {self.title.title}"
 
+
+class Rating(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE
@@ -51,3 +55,51 @@ class Rating(models.Model):
 
     stars = models.IntegerField()
 
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} avaliou {self.title.title} com {self.stars} estrelas"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    title = models.ForeignKey(
+        Titles,
+        on_delete=models.CASCADE
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} favoritou {self.title.title}"
+
+
+class SearchHistory(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    term = models.CharField(
+        max_length=120
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} pesquisou {self.term}"
+
+    class Meta:
+        ordering = ["-created_at"]

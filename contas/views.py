@@ -5,32 +5,40 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 
 
+from django.shortcuts import render, redirect
+from django.views.decorators.cache import never_cache
+
+
+@never_cache
 def pagina_login(request):
+    if request.user.is_authenticated:
+        return redirect("/app/")
+
     return render(request, "contas/login.html")
 
 
+@never_cache
 def pagina_teste(request):
     status = request.GET.get("status", "")
     email = request.GET.get("email", "")
 
-    return render(request, "contas/teste.html", {
+    contexto = {
         "status": status,
         "email": email,
         "usuario_logado": request.user.is_authenticated,
-    })
+    }
+
+    return render(request, "contas/teste.html", contexto)
 
 
-@csrf_exempt
+@require_POST
+@csrf_protect
 def api_cadastrar(request):
-    if request.method != "POST":
-        return JsonResponse({
-            "status": "metodo_invalido",
-            "mensagem": "Use POST para cadastrar."
-        }, status=405)
-
     try:
         dados = json.loads(request.body)
     except json.JSONDecodeError:
@@ -69,7 +77,7 @@ def api_cadastrar(request):
 
         return JsonResponse({
             "status": "conta_criada",
-            "mensagem": "Conta criada com sucesso.",
+            "mensagem": "Conta criada com sucesso. Agora faça login.",
             "email": email
         }, status=201)
 
@@ -88,13 +96,14 @@ def api_cadastrar(request):
         }, status=500)
 
 
-@csrf_exempt
+@require_POST
+@csrf_protect
 def api_login(request):
-    if request.method != "POST":
+    if request.user.is_authenticated:
         return JsonResponse({
-            "status": "metodo_invalido",
-            "mensagem": "Use POST para fazer login."
-        }, status=405)
+            "status": "conta_logada",
+            "mensagem": "Você já está logado."
+        }, status=200)
 
     try:
         dados = json.loads(request.body)
@@ -119,7 +128,11 @@ def api_login(request):
             "mensagem": "Conta não existente."
         }, status=404)
 
-    usuario = authenticate(request, username=email, password=senha)
+    usuario = authenticate(
+        request,
+        username=email,
+        password=senha
+    )
 
     if usuario is None:
         return JsonResponse({
@@ -136,6 +149,14 @@ def api_login(request):
     }, status=200)
 
 
+@never_cache
 def sair(request):
     logout(request)
-    return redirect("/login/")
+
+    response = redirect("/login/")
+
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate, max-age=0"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+
+    return response
